@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 using namespace std;
 
@@ -11,15 +12,17 @@ struct Node {
     Node *next;
 };
 
-void addToHead(int val, Node *&hd);
-void addToTail(int val, Node *&hd);
+void addToHead(int val, string com, Node *&hd);
+void addToTail(int val, string com, Node *&hd);
 void output(Node * hd);
+void deleteList(Node *);
 
 int main()
 {
     Node *head = nullptr;
     int count = 0;
     double reviewScore;
+    string reviewNotes;
     char response;
 
     // create a linked list of size SIZE with random numbers 0-99
@@ -27,19 +30,41 @@ int main()
     {
         int insertion;
         //asks the user whether they would like to insert the previously obtained random value at the head or the tail end of the linked list
-        cout << "Which linked list method should we use?\n";
-        cout << setw(15) << "[1] New nodes are added at the head of the linked list\n";
-        cout << setw(15) << "[2] New nodes are added at the tail of the linked list\n";
-        cin >> insertion;
-        cin.ignore();
-        //determines, which function will be called to either add the value found to the front or back of the linked list respectively
-        if(insertion == 1)
-            addToHead(reviewScore, head);
-        else if(insertion == 2)
-            addToTail(reviewScore, head);
+        
+        if(response == 'Y' || response == 'y')
+        {
+            cout << "Which linked list method should we use?\n";
+            cout << setw(15) << "[1] New nodes are added at the head of the linked list\n";
+            cout << setw(15) << "[2] New nodes are added at the tail of the linked list\n";
+            cin >> insertion;
+            cin.ignore();
 
-        count++;
+            cout << "Enter review rating 0-5: ";
+            cin >>reviewScore;
+            cin.ignore();
+
+            cout << "Enter review comments: ";
+            getline(cin, reviewNotes);
+            cin.ignore();
+
+            //determines, which function will be called to either add the value found to the front or back of the linked list respectively
+            if(insertion == 1)
+                addToHead(reviewScore, reviewNotes, head);
+            else if(insertion == 2)
+                addToTail(reviewScore, reviewNotes, head);
+
+            count++;
+        }
+        else if(response != 'Y' || response != 'y' || response != 'n' || response != 'N')
+            cout << "Invalid response. Please try again.\n";
+
+        cout << "Enter another review? Y/N: ";
+        cin >> response;
+        cin.ignore();
     }
+
+    output(head);
+    deleteList(head);
 
     return 0;
 }
@@ -51,14 +76,17 @@ void output(Node * hd) {
     }
     int count = 1;
     Node * current = hd;
+
+    cout << "Outputtin all reviews:\n";
+
     while (current) {
-        cout << "Review #" << count++ << ": " << current->value << ": " << current->comments << endl;
+        cout << setw(15) << "> Review #" << count++ << ": " << current->value << ": " << current->comments << endl;
         current = current->next;
     }
     cout << endl;
 }
 
-void addToHead(int val, Node *&hd)
+void addToHead(int val, string com, Node *&hd)
 {
     Node *newVal = new Node;
         
@@ -67,16 +95,18 @@ void addToHead(int val, Node *&hd)
             hd = newVal;
             newVal->next = nullptr;
             newVal->value = val;
+            newVal->comments = com;
         }
         // if its a second or subsequent node; place at the head
         else {
             newVal->next = hd;
             newVal->value = val;
+            newVal->comments = com;
             hd = newVal;
         }
 }
 
-void addToTail(int val, Node *&hd)
+void addToTail(int val, string com, Node *&hd)
 {
      Node *newVal = new Node;
     // adds node at head if list is empty, as that position would also technically be the tail end
@@ -85,6 +115,7 @@ void addToTail(int val, Node *&hd)
         hd = newVal;
         newVal->next = nullptr;
         newVal->value = val;
+        newVal->comments = com;
     }
     //iff the list is not empty, the function will traverse the array until it reaches the last value, at which point it will add the designated value to the end of the list
     else if (hd != nullptr)
@@ -97,5 +128,18 @@ void addToTail(int val, Node *&hd)
         current->next = newVal;
         newVal->next = nullptr;
         newVal->value = val;
+        newVal->comments = com;
     }
+}
+
+void deleteList(Node *hd)
+{
+    // deleting the linked list
+    Node *current = hd;
+    while (current) {
+        hd = current->next;
+        delete current;
+        current = hd;
+    }
+    hd = nullptr;
 }
