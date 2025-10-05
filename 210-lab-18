@@ -1,0 +1,15 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+void addToHead;
+void addToTail;
+double avgReview;
+
+int main()
+{
+
+}
