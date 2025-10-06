@@ -12,7 +12,7 @@ struct Node {
 
 void addToHead(float val, string com, Node *&hd);
 void addToTail(float val, string com, Node *&hd);
-void output(Node * hd);
+void output(float val, int c, Node * hd);
 void deleteList(Node *hd);
 
 int main()
@@ -20,58 +20,63 @@ int main()
     Node *head = nullptr;
     int count = 0;
     float reviewScore;
+    float totalScore;
     string reviewNotes;
     char response;
+    int insertion;
+
+    cout << "Which linked list method should we use?\n";
+        cout << setw(15) << "[1] New nodes are added at the head of the linked list\n";
+        cout << setw(15) << "[2] New nodes are added at the tail of the linked list\n";
+        cin >> insertion;
+        cin.ignore();
 
     cout << "Enter a review? Y/N ";
     cin >> response;
     cin.ignore();
 
-    // create a linked list of size SIZE with random numbers 0-99
-    while (response != 'n' || response != 'N') 
+    if (response == 'y' || response == 'Y') 
     {
-        int insertion;
         //asks the user whether they would like to insert the previously obtained random value at the head or the tail end of the linked list
-        
-        if(response == 'Y' || response == 'y')
+        while (true)
         {
-            cout << "Which linked list method should we use?\n";
-            cout << setw(15) << "[1] New nodes are added at the head of the linked list\n";
-            cout << setw(15) << "[2] New nodes are added at the tail of the linked list\n";
-            cin >> insertion;
+            if(response == 'Y' || response == 'y')
+            {
+                count++;
+                
+                cout << "Enter review rating 0-5: ";
+                cin >> reviewScore;
+                cin.ignore();
+
+                totalScore += reviewScore;
+
+                cout << "Enter review comments: ";
+                getline(cin, reviewNotes);
+
+                //determines, which function will be called to either add the value found to the front or back of the linked list respectively
+                if(insertion == 1)
+                    addToHead(reviewScore, reviewNotes, head);
+                else if(insertion == 2)
+                    addToTail(reviewScore, reviewNotes, head);
+            }
+                
+            cout << "Enter another review? Y/N: ";
+            cin >> response;
             cin.ignore();
 
-            cout << "Enter review rating 0-5: ";
-            cin >> reviewScore;
-            cin.ignore();
-
-            cout << "Enter review comments: ";
-            getline(cin, reviewNotes);
-            cin.ignore();
-
-            //determines, which function will be called to either add the value found to the front or back of the linked list respectively
-            if(insertion == 1)
-                addToHead(reviewScore, reviewNotes, head);
-            else if(insertion == 2)
-                addToTail(reviewScore, reviewNotes, head);
-
-            count++;
+            if (response == 'n' || response == 'N') break;
+            else if(response != 'Y' && response != 'y' && response != 'n' && response != 'N')
+                cout << "Invalid response. Please try again.\n"; 
         }
-        else if(response != 'Y' || response != 'y' || response != 'n' || response != 'N')
-            cout << "Invalid response. Please try again.\n";
-
-        cout << "Enter another review? Y/N: ";
-        cin >> response;
-        cin.ignore();
     }
 
-    output(head);
+    output(totalScore, count, head);
     deleteList(head);
 
     return 0;
 }
 
-void output(Node * hd) 
+void output( float val, int c, Node * hd) 
 {
     if (!hd) {
         cout << "Empty list.\n";
@@ -80,13 +85,16 @@ void output(Node * hd)
     int count = 1;
     Node * current = hd;
 
-    cout << "Outputtin all reviews:\n";
+    cout << "Outputting all reviews:\n";
 
-    while (current) {
+    while (current) 
+    {
         cout << setw(15) << "> Review #" << count++ << ": " << current->value << ": " << current->comments << endl;
         current = current->next;
     }
-    cout << endl;
+
+    float average = val / c;
+    cout << setw(24) << "> Average Rating : " << average << endl;
 }
 
 void addToHead(float val, string com, Node *&hd)
