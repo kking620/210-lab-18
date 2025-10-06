@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "210-lab-18": "cpp"
+        "210-lab-18": "cpp",
+        "iostream": "cpp"
     }
 }

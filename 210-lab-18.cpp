@@ -1,15 +1,19 @@
+//COMSC-210 | Lab 18 | Kristofer King
+//IDE Used: VSC
 #include <iostream>
 #include <iomanip>
 #include <string>
 
 using namespace std;
 
+//declaring the Node struct so that we can generate a linked list
 struct Node {
     float value;
     string comments;
     Node *next;
 };
 
+//prototype functions that add the values to either end of the linked list, output the list itself, and delete the list
 void addToHead(float val, string com, Node *&hd);
 void addToTail(float val, string com, Node *&hd);
 void output(float val, int c, Node * hd);
@@ -17,6 +21,7 @@ void deleteList(Node *hd);
 
 int main()
 {
+    //declaring and initializing the variables we will be using throughout the program
     Node *head = nullptr;
     int count = 0;
     float reviewScore;
@@ -25,59 +30,67 @@ int main()
     char response;
     int insertion;
 
+    //asks the user if they would like to add the nodes to the head or the tail of the linked list
     cout << "Which linked list method should we use?\n";
         cout << setw(15) << "[1] New nodes are added at the head of the linked list\n";
         cout << setw(15) << "[2] New nodes are added at the tail of the linked list\n";
         cin >> insertion;
         cin.ignore();
 
+    //asks if the user wishes to enter a review of a movie
     cout << "Enter a review? Y/N ";
     cin >> response;
     cin.ignore();
 
-    if (response == 'y' || response == 'Y') 
+    while (true)
     {
-        //asks the user whether they would like to insert the previously obtained random value at the head or the tail end of the linked list
-        while (true)
+         //asks the user whether they would like to insert the previously obtained random value at the head or the tail end of the linked list
+        if(response == 'Y' || response == 'y')
         {
-            if(response == 'Y' || response == 'y')
-            {
-                count++;
-                
-                cout << "Enter review rating 0-5: ";
-                cin >> reviewScore;
-                cin.ignore();
-
-                totalScore += reviewScore;
-
-                cout << "Enter review comments: ";
-                getline(cin, reviewNotes);
-
-                //determines, which function will be called to either add the value found to the front or back of the linked list respectively
-                if(insertion == 1)
-                    addToHead(reviewScore, reviewNotes, head);
-                else if(insertion == 2)
-                    addToTail(reviewScore, reviewNotes, head);
-            }
-                
-            cout << "Enter another review? Y/N: ";
-            cin >> response;
+           count++;
+            //prompts the user to enter a review score
+            cout << "Enter review rating 0-5: ";
+            cin >> reviewScore;
             cin.ignore();
 
-            if (response == 'n' || response == 'N') break;
-            else if(response != 'Y' && response != 'y' && response != 'n' && response != 'N')
-                cout << "Invalid response. Please try again.\n"; 
-        }
-    }
+            //adds this review score to the total score
+            totalScore += reviewScore;
+            
+            //prompts the user to enter a comment about the movie
+            cout << "Enter review comments: ";
+            getline(cin, reviewNotes);
 
+            //determines, which function will be called to either add the value found to the front or back of the linked list respectively
+            if(insertion == 1)
+                addToHead(reviewScore, reviewNotes, head);
+            else if(insertion == 2)
+                addToTail(reviewScore, reviewNotes, head);
+        }
+        
+        //asks the user if they would like to enter another review
+        cout << "Enter another review? Y/N: ";
+        cin >> response;
+        cin.ignore();
+
+        //if they respond no then the loop breaks, but if they input a response that is neither yes or no then the loop will output an invalid response message
+        if (response == 'n' || response == 'N') break;
+        else if(response != 'Y' && response != 'y' && response != 'n' && response != 'N')
+            cout << "Invalid response. Please try again.\n"; 
+    }
+    
+    //calls the output function to display the information gathered in this program
     output(totalScore, count, head);
+
+    //calls the delete function to delete the linked list and clear memory
     deleteList(head);
 
     return 0;
 }
 
+//function to display the information gathered
 void output( float val, int c, Node * hd) 
 {
+    //if there is nothing on the linked list, then an empty list message is displayed
     if (!hd) {
         cout << "Empty list.\n";
         return;
@@ -87,16 +100,19 @@ void output( float val, int c, Node * hd)
 
     cout << "Outputting all reviews:\n";
 
+    //while loop that traverses the linked list and outputs the review score and the review comments
     while (current) 
     {
         cout << setw(15) << "> Review #" << count++ << ": " << current->value << ": " << current->comments << endl;
         current = current->next;
     }
 
+    //calculates the average review score that was inputted into the program
     float average = val / c;
     cout << setw(24) << "> Average Rating : " << average << endl;
 }
 
+//function that adds the values to the head of the linked list
 void addToHead(float val, string com, Node *&hd)
 {
     Node *newVal = new Node;
@@ -119,6 +135,7 @@ void addToHead(float val, string com, Node *&hd)
         }
 }
 
+//function that adds the values to the tail end of the linked list
 void addToTail(float val, string com, Node *&hd)
 {
      Node *newVal = new Node;
@@ -145,9 +162,9 @@ void addToTail(float val, string com, Node *&hd)
     }
 }
 
+//function that deletes the linked list
 void deleteList(Node *hd)
 {
-    // deleting the linked list
     Node *current = hd;
     while (current) 
     {
